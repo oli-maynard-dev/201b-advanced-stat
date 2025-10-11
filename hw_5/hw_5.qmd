@@ -1,0 +1,54 @@
+---
+title: STAT 201B HW4
+subtitle: Oliver Maynard
+format:
+  pdf:
+    documentclass: article
+    margin-left: 30mm
+    margin-right: 30mm
+    toc: false
+  html:
+    theme: cosmo
+    css: ../styles.css
+    toc: false
+    code-copy: true
+    code-block-background: true
+execute:
+  freeze: auto
+---
+
+# Question 1 - optional part b
+
+```{python}
+import numpy as np
+from scipy.stats import norm
+
+# parameters
+lam0 = 1
+n = 20
+alpha = 0.05
+B = 1000
+z_crit = norm.ppf(1 - alpha/2)
+
+# simulation
+np.random.seed(0)
+rejects = 0
+for _ in range(B):
+    x = np.random.poisson(lam0, n)
+    xbar = np.mean(x)
+    T = np.sqrt(n) * (xbar - lam0) / np.sqrt(xbar)
+    if abs(T) > z_crit:
+        rejects += 1
+
+type_I_error = rejects / B
+print(f"Estimated Type I error rate: {type_I_error:.3f}")
+print(f"out of {B} experiments we reject the null {rejects} times")
+
+print(f"Estimated Type I error rate: {type_I_error:.3f}")
+print(f"Difference from 0.05: {type_I_error - 0.05:+.3f}")
+
+if abs(type_I_error - 0.05) < 0.01:
+    print("The simulated Type I error rate is very close to 0.05.")
+else:
+    print("The simulated Type I error rate deviates noticeably from 0.05.")
+```
